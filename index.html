@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            background: #f0f4f8;
+            color: #333;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Container for the assistant UI */
+        .assistant-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #007aff;
+        }
+
+        p {
+            font-size: 1em;
+            color: #555;
+        }
+
+        .chat-box {
+            height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f7f7f7;
+            border-radius: 8px;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.05);
+            font-size: 1em;
+            text-align: left;
+        }
+
+        .chat-box div {
+            margin: 10px 0;
+            padding: 8px 12px;
+            border-radius: 12px;
+            max-width: 80%;
+        }
+
+        .user-msg {
+            background: #e1f5fe;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .assistant-msg {
+            background: #e0e0e0;
+            margin-right: auto;
+            text-align: left;
+        }
+
+        /* Input field styling */
+        input {
+            background: #f4f9ff;
+            color: #333;
+            border: 2px solid #ccc;
+            border-radius: 25px;
+            padding: 10px 15px;
+            font-size: 1.1em;
+            width: 100%;
+            margin-top: 10px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            height: 50px;
+        }
+
+        input:focus {
+            border-color: #007aff;
+            outline: none;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+        }
+
+        /* Button styling */
+        button {
+            background: #007aff;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #0051a8;
+        }
+
+        button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        /* Footer styling */
+        .footer {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9em;
+            color: #aaa;
+            font-weight: 300;
+        }
+
+        .audio-unavailable {
+            color: #ff3b30;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="assistant-container">
+        <h1>🎤 Virtual Assistant</h1>
+        <p>Ask a question or enter a command:</p>
+
+        <!-- Chat display -->
+        <div class="chat-box" id="chatBox">
+            <div class="assistant-msg">Hi! How can I assist you today? 😊</div>
+        </div>
+
+        <!-- Input & buttons -->
+        <input id="commandInput" type="text" placeholder="Enter command..." class="input-field">
+        <button id="submitButton">Send Command</button>
+        <button id="startVoiceButton" disabled>Start Voice Command (Unavailable)</button>
+
+        <div id="audioUnavailable" class="audio-unavailable">
+            🎙️ Voice Command: Unavailable
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Powered by AI Virtual Assistant</p>
+    </div>
+
+    <script>
+        const submitButton = document.getElementById("submitButton");
+        const commandInput = document.getElementById("commandInput");
+        const chatBox = document.getElementById("chatBox");
+        const startVoiceButton = document.getElementById("startVoiceButton");
+        const audioUnavailable = document.getElementById("audioUnavailable");
+
+        // Function to display user and assistant messages
+        function displayMessage(message, sender = 'assistant') {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add(sender === 'user' ? 'user-msg' : 'assistant-msg');
+            messageDiv.textContent = message;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+        }
+
+        // Send command function
+        function sendCommand(command) {
+            displayMessage(command, 'user'); // Display user's input
+            displayMessage('[Processing...]', 'assistant'); // Display processing state
+
+            fetch('http://localhost:8080', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ command: command }),
+            })
+            .then(response => response.json()) // Parse response as JSON
+            .then(data => {
+                // Check if response contains candidates and extract text
+                if (data && data.candidates && data.candidates.length > 0) {
+                    const message = data.candidates[0].content.parts[0].text;
+                    displayMessage(message, 'assistant'); // Display the extracted message
+                } else {
+                    displayMessage('Received invalid response format.', 'assistant');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                displayMessage("Sorry, I couldn't process your request.", 'assistant');
+            });
+        }
+
+        // Handle text input submission
+        submitButton.addEventListener("click", () => {
+            const command = commandInput.value.trim();
+            if (command) {
+                sendCommand(command);
+                commandInput.value = ''; // Clear input field
+            }
+        });
+
+        // Handle voice command button (disabled in this case)
+        startVoiceButton.addEventListener("click", () => {
+            displayMessage("Sorry, voice command is unavailable.", 'assistant');
+        });
+    </script>
+</body>
+</html>
