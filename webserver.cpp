@@ -37,25 +37,55 @@ string getCurrentTime() {
 // Function to handle voice commands
 string handleCommand(const string& command) {
     if (command.find("hello") != string::npos) {
-        return "Hello! How can I assist you today?";
+        return "Hello! How can I assist you today? Feel free to ask me anything, from setting reminders to telling you jokes!";
     } else if (command.find("time") != string::npos) {
-        return "The current time is: " + getCurrentTime();
+        return "The current time is: " + getCurrentTime() + ". Let me know if you need help with anything else!";
     } else if (command.find("open website") != string::npos) {
-        return "Sure! Opening the website for you.";
+        return "Sure! Opening the website for you. Please hold on a moment while I fetch that for you.";
     } else if (command.find("joke") != string::npos) {
-        return "Why don’t skeletons fight each other? They don’t have the guts!";
+        return "Why don’t skeletons fight each other? They don’t have the guts! If you need more jokes, just ask!";
     } else if (command.find("weather") != string::npos) {
-        return "I cannot fetch real-time weather yet, but I can help you with the weather report if needed.";
+        return "I cannot fetch real-time weather at the moment, but I can help you find weather reports from other sources or even give tips on how to stay prepared for different weather conditions!";
     } else if (command.find("your name") != string::npos) {
-        return "I am your personal assistant!";
+        return "I am your personal assistant, created by jelina Bhatt. My purpose is to assist with various tasks, provide information, and make your day easier!";
     } else if (command.find("goodbye") != string::npos) {
-        return "Goodbye! Have a great day ahead!";
+        return "Goodbye! Have a great day ahead! Don't hesitate to come back whenever you need help!";
     } else if (command.find("who are you") != string::npos) {
-        return "I am a voice assistant, created by jelina boss to help you with various tasks!";
+        return "I am a voice assistant created by jelina Bhatt, a student at Far Western University. My main goal is to help you with tasks like setting reminders, answering questions, telling jokes, and much more!";
     } else if (command.find("set reminder") != string::npos) {
-        return "Reminder set successfully! What would you like me to remind you of?";
+        return "Reminder set successfully! What would you like me to remind you of? I can help you with anything from meetings to taking breaks.";
     } else if (command.find("thank you") != string::npos) {
-        return "You're welcome!";
+        return "You're welcome! I'm always here to help. If you need anything else, just ask!";
+    } else if (command.find("What do you do") != string::npos) {
+        return "I can assist you in various ways! I can tell you the time, help you set reminders, answer your questions, provide jokes, give information about current events, and more! Just ask me anything!";
+    } else if (command.find("Who is jelina Bhatt") != string::npos) {
+        return "jelina Bhatt is a dedicated student from Far Western University, Nepal, currently pursuing a B.Tech in Computer Science and Engineering. He is passionate about web development, AI, machine learning, and creating impactful solutions. In addition to studying, he enjoys photography, traveling, and exploring new things.";
+    } else if (command.find("Tell me a fun fact") != string::npos) {
+        return "Did you know? An octopus has three hearts: two pump blood to the gills, and one pumps it to the rest of the body! Isn't that fascinating?";
+    } else if (command.find("set a reminder for tomorrow") != string::npos) {
+        return "Reminder for tomorrow has been set! Don't forget to check back with me for any updates or new tasks you need assistance with!";
+    } else if (command.find("what is the weather") != string::npos) {
+        return "I can't fetch real-time weather, but I can tell you how to find accurate weather reports online. Websites like AccuWeather and weather apps on your phone can give you up-to-date weather information.";
+    } else if (command.find("are you smart") != string::npos) {
+        return "I try my best! But I always strive to learn more and improve my responses. If there’s something I don’t know, I’ll do my best to find it out!";
+    } else if (command.find("tell me a riddle") != string::npos) {
+        return "Alright! Here’s a riddle for you: What has keys but can’t open locks? (Answer: A piano!)";
+    } else if (command.find("who is the president of Nepal") != string::npos) {
+        return "The current president of Nepal is Bidya Devi Bhandari. She has been serving as the first female president of Nepal since 2015.";
+    } else if (command.find("how to learn coding") != string::npos) {
+        return "To learn coding, start with the basics like understanding programming concepts, syntax, and problem-solving. Websites like Codecademy, freeCodeCamp, and Coursera offer great courses for beginners. Consistent practice and building projects will help you improve faster!";
+    } else if (command.find("what is AI") != string::npos) {
+        return "AI, or Artificial Intelligence, refers to machines or systems designed to mimic human intelligence. This includes tasks like learning, problem-solving, and decision-making. AI is widely used in applications like self-driving cars, voice assistants, and more!";
+    } else if (command.find("what is Machine Learning") != string::npos) {
+        return "Machine Learning (ML) is a subset of AI that enables systems to automatically learn and improve from experience without being explicitly programmed. ML is widely used in applications such as image recognition, recommendation systems, and natural language processing.";
+    } else if (command.find("how do you work") != string::npos) {
+        return "I work by receiving commands from you, processing them, and then providing relevant responses. I utilize various APIs and built-in logic to perform tasks and fetch information. My capabilities depend on the information available to me!";
+    } else if (command.find("help me with coding") != string::npos) {
+        return "I'd be happy to help you with coding! Let me know what programming language or specific problem you're working on, and I'll provide guidance or solutions!";
+    } else if (command.find("who is Elon Musk") != string::npos) {
+        return "Elon Musk is the CEO of Tesla and SpaceX. He is known for his work in advancing electric vehicles, space exploration, and renewable energy. Musk is also known for his vision of colonizing Mars and creating sustainable technologies.";
+    } else if (command.find("what is quantum computing") != string::npos) {
+        return "Quantum computing is a field of computing that leverages the principles of quantum mechanics to process information in ways that classical computers cannot. It has the potential to revolutionize fields such as cryptography, optimization, and AI!";
     } else {
         // Interact with the Gemini API if the command is unknown
         return fetchGeminiResponse(command);
